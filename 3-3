@@ -1,0 +1,43 @@
+from typing import Any, Dict, List, Union
+
+def function_name(search: str, status: bool, *args: Union[int, str], **kwargs: Dict[str, Any]) -> Union[List[int], str]:
+    """
+    Обрабатывает аргументы в зависимости от параметров search и status.
+
+    Args:
+        search (str): Определяет область поиска аргументов ('args' или 'kwargs').
+        status (bool): Если True и search=='args', фильтрует только целые числа.
+        *args: Неименованные аргументы (int или str).
+        **kwargs: Именованные аргументы.
+
+    Returns:
+        Union[List[int], str]: Результат обработки аргументов.
+            - Если search == "args" и status == True: Список целых чисел из args.
+            - Если search == "args" и status == False: Строка, объединенная из args.
+            - Если search == "kwargs": Строка с ключами и значениями из kwargs.
+
+    Raises:
+        ValueError: Если search не равен 'args' или 'kwargs'.
+    """
+
+    if search == "args":
+        if status:
+            return [arg for arg in args if isinstance(arg, int)] # Более компактная фильтрация
+        else:
+            return "".join(map(str, args)) # Более эффективное объединение строк
+
+    elif search == "kwargs":
+        return "; ".join(f"Key: {k}, Value: {v}" for k, v in kwargs.items()) # f-strings и join
+
+    else:
+        raise ValueError("Неверное значение для параметра search. Допустимые значения: 'args' или 'kwargs'.") # Более информативное сообщение об ошибке
+
+
+# Примеры использования (для тестирования):
+print(function_name("args", True, 1, "hello", 2, 3, "world")) # Output: [1, 2, 3]
+print(function_name("args", False, 1, "hello", 2, 3, "world")) # Output: 1hello23world
+print(function_name("kwargs", False, a=1, b="hello", c=3))      # Output: Key: a, Value: 1; Key: b, Value: hello; Key: c, Value: 3
+try:
+    print(function_name("invalid", False, 1, 2, 3))          # Raises ValueError
+except ValueError as e:
+    print(e) # Output: Неверное значение для параметра search...
