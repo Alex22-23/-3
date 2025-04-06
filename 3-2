@@ -1,0 +1,45 @@
+import math
+
+def add(a, b):
+    # ... (остальные функции без изменений)
+
+def main():
+    operations = {
+        "1": {"func": add, "args": ["Слагаемое 1: ", "Слагаемое 2: "]},
+        "2": {"func": subtract, "args": ["Уменьшаемое: ", "Вычитаемое: "]},
+        "3": {"func": multiply, "args": ["Множитель 1: ", "Множитель 2: "]},
+        "4": {"func": divide, "args": ["Делимое: ", "Делитель: "]},
+        "5": {"func": power, "args": ["Основание: ", "Степень: "]},
+        "6": {"func": factorial, "args": ["Введите число для факториала: "]},
+        "7": {"func": sine, "args": ["Введите угол в радианах: "]},
+        "8": {"func": median, "args": ["Список чисел (через пробел): "]}
+    }
+
+    print("Доступные операции:")
+    for key, value in operations.items():
+        print(f"{key}. {value['func'].__name__.capitalize()}") # Динамическое отображение имени функции
+    print("--------------------")
+
+    while True:
+        operation = input("Операция (или 'exit' для выхода): ")
+        if operation.lower() == 'exit':
+            break
+
+        if operation in operations:
+            try:
+                args = []
+                for arg_prompt in operations[operation]["args"]:
+                    if operations[operation]["func"] is median: # Обработка списка для медианы
+                        args = list(map(float, input(arg_prompt).split()))
+                    else:
+                        args.append(float(input(arg_prompt)))
+                result = operations[operation]["func"](*args)
+                print(">>>", result)
+            except (TypeError, ValueError, ZeroDivisionError) as e:
+                print(f"Ошибка: {e}")
+        else:
+            print("Некорректная операция, попробуйте еще раз.")
+
+
+if __name__ == "__main__": # Исправлено условие запуска
+    main()
